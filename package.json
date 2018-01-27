@@ -1,0 +1,25 @@
+{
+  "name": "LoginApp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+  	"node": "6.11.1"
+  },
+  "dependencies": {
+    "bcrypt": "^1.0.3",
+    "body-parser": "^1.18.2",
+    "connect-mongo": "^2.0.0",
+    "express": "4.16.2",
+    "express-fileupload": "^0.3.0",
+    "express-session": "^1.15.6",
+    "paypal-rest-sdk": "^1.8.1",
+    "pug": "^2.0.0-rc.4"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
