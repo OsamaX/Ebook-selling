@@ -9,7 +9,7 @@ app.use("/static", express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/uploads"));
 app.use(express.static(__dirname + "/node_modules"));
 
-mongoose.connect("mongodb://localhost:27017/bookworm");
+mongoose.connect("mongodb://bookworm123:assassin123@ds117148.mlab.com:17148/bookworm");
 
 let db = mongoose.connection;
 
