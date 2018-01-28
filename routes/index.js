@@ -176,11 +176,11 @@ router.get("/books", middlewear.requireLogIn, (req, res, next) => {
     let toSearch = {}
 
     if (q != "sci-fic" && q != "act-adv" && q != "drama" && q != "romance" && q != "horror" && q != "my") {
-        toSearch = {sold: "NO"};
-    } else if (q == "my") toSearch = {email: currentEmail, sold: "NO"}
-    else toSearch = {category: q, sold: "NO"};
+        toSearch = { sold: "NO" };
+    } else if (q == "my") toSearch = { email: currentEmail, sold: "NO" }
+    else toSearch = { category: q, sold: "NO" };
 
-    Book.count(toSearch, function(err, count) {
+    Book.count(toSearch, function (err, count) {
         if (err) return next(err);
 
         sort(res, Book, q, currentEmail, function (books) {
@@ -188,7 +188,7 @@ router.get("/books", middlewear.requireLogIn, (req, res, next) => {
         });
     })
 
-   
+
 
 });
 
@@ -201,7 +201,7 @@ router.post("/add_book", (req, res, next) => {
             return res.send("prof-empt");
         }
     })
-    
+
 
 });
 
@@ -209,7 +209,7 @@ router.delete("/delete_book", (req, res, next) => {
     let q = utility.getQuery(req.headers.referer);
     let pageNum = req.body.pageNum;
 
-    if (pageNum > 0 ) {
+    if (pageNum > 0) {
         pageNum = pageNum - 1;
     }
 
@@ -226,7 +226,7 @@ router.delete("/delete_book", (req, res, next) => {
 
                 fs.stat(imgPath, (err, stat) => {
                     if (!err) {
-                    
+
                         fs.unlinkSync(imgPath);
                     }
                 });
@@ -241,10 +241,10 @@ router.delete("/delete_book", (req, res, next) => {
 });
 
 router.get("/page", (req, res, next) => {
-    let {pageNum} = req.query;
+    let { pageNum } = req.query;
     let q = utility.getQuery(req.headers.referer);
 
-    pageNum = pageNum -1; 
+    pageNum = pageNum - 1;
 
     return sort(res, Book, q, req.session.email, undefined, pageNum);
 
@@ -253,23 +253,23 @@ router.get("/page", (req, res, next) => {
 router.delete("/delete_cart", (req, res, next) => {
     let id = req.body.id;
 
-    Cart.findByIdAndRemove(id, function(err, item) {
+    Cart.findByIdAndRemove(id, function (err, item) {
         if (err) return next(err);
 
-        Book.findByIdAndRemove(item.book, function(err, book) {
+        Book.findByIdAndRemove(item.book, function (err, book) {
             if (err) return next(err);
 
             let imgPath = path.join(process.cwd(), "uploads", book.image);
-            
+
             fs.stat(imgPath, (err, stat) => {
                 if (!err) {
-                
+
                     fs.unlinkSync(imgPath);
                 }
             });
             return res.send("/cart");
         })
-        
+
     })
 
 });
@@ -279,12 +279,12 @@ router.get("/book_details", (req, res, next) => {
 
     let id = req.query.id;
 
-    Book.findById(req.query.id, function(err, book) {
+    Book.findById(req.query.id, function (err, book) {
         if (err) return next(err);
 
         details.push(book);
 
-        User.findOne({email: book.email}, function(err, user) {
+        User.findOne({ email: book.email }, function (err, user) {
             if (err) return next(err);
 
             details.push(user.details);
@@ -333,21 +333,21 @@ router.post("/buy", (req, res, next) => {
                 "description": seller_email
             }]
         };
-    
+
         paypal.payment.create(create_payment_json, function (error, payment) {
             if (error) {
                 console.log(error)
                 return next(error);
-                
+
             } else {
                 res.send(payment.links[1].href);
             }
         });
 
-});
-    
+    });
 
-    
+
+
 });
 
 router.get("/success", (req, res, next) => {
@@ -385,7 +385,7 @@ router.get("/success", (req, res, next) => {
                 Cart.create(details, (err, cart) => {
                     if (err) return next(err);
 
-                   return res.redirect("/cart");
+                    return res.redirect("/cart");
                 });
             })
 
@@ -398,10 +398,10 @@ router.get("/cancel", (req, res) => {
 });
 
 router.get("/cart", middlewear.requireLogIn, (req, res, next) => {
-    Cart.find({email: req.session.email}, (err, items) => {
+    Cart.find({ email: req.session.email }, (err, items) => {
         if (err) return next(err);
 
-        return res.render("cart", {items});
+        return res.render("cart", { items });
     });
 });
 
@@ -441,7 +441,7 @@ router.get("/test", (req, res, next) => {
 });
 
 router.all('*', (req, res) => {
-    res.status(404).render("error", {error: "File not Found", status: res.statusCode});
-  })
+    res.status(404).render("error", { error: "File not Found", status: res.statusCode });
+})
 
 module.exports = router;
