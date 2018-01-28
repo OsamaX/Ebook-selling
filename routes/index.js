@@ -98,7 +98,7 @@ router.post("/register", (req, res, next) => {
                 if (err.errmsg.includes("email_1")) {
                     res.render("register", { error: "Email Already in Use!" })
                 } else {
-                    next(err);
+                    return next(err);
                 }
 
             } else {
@@ -155,7 +155,7 @@ router.post("/details", (req, res, next) => {
     if (ok) {
 
         User.update({ _id: req.session.userId }, { $set: { details: req.body } }, err => {
-            if (err) next(err);
+            if (err) return next(err);
 
             return res.send(req.body);
         });
@@ -181,7 +181,7 @@ router.get("/books", middlewear.requireLogIn, (req, res, next) => {
     else toSearch = {category: q, sold: "NO"};
 
     Book.count(toSearch, function(err, count) {
-        if (err) next(err);
+        if (err) return next(err);
 
         sort(res, Book, q, currentEmail, function (books) {
             return res.render("books", { books, currentEmail, count, q });
@@ -215,12 +215,12 @@ router.delete("/delete_book", (req, res, next) => {
 
 
     Book.findById(req.body.id, function (err, book) {
-        if (err) next(err);
+        if (err) return next(err);
 
         if (book.email == req.session.email) {
 
             Book.findByIdAndRemove(req.body.id, function (err, doc) {
-                if (err) next(err);
+                if (err) return next(err);
 
                 let imgPath = path.join(process.cwd(), "uploads", doc.image);
 
@@ -254,10 +254,10 @@ router.delete("/delete_cart", (req, res, next) => {
     let id = req.body.id;
 
     Cart.findByIdAndRemove(id, function(err, item) {
-        if (err) next(err);
+        if (err) return next(err);
 
         Book.findByIdAndRemove(item.book, function(err, book) {
-            if (err) next(err);
+            if (err) return next(err);
 
             let imgPath = path.join(process.cwd(), "uploads", book.image);
             
@@ -280,12 +280,12 @@ router.get("/book_details", (req, res, next) => {
     let id = req.query.id;
 
     Book.findById(req.query.id, function(err, book) {
-        if (err) next(err);
-        console.log(book);
+        if (err) return next(err);
+
         details.push(book);
 
         User.findOne({email: book.email}, function(err, user) {
-            if (err) next(err);
+            if (err) return next(err);
 
             details.push(user.details);
             return res.send(details);
@@ -298,7 +298,7 @@ let price;
 
 router.post("/buy", (req, res, next) => {
     Book.findById(req.body.id, (err, book) => {
-        if (err) next(err);
+        if (err) return next(err);
 
         if (book.sold == "YES") return res.send("Book already sold");
 
@@ -340,7 +340,6 @@ router.post("/buy", (req, res, next) => {
                 return next(error);
                 
             } else {
-                console.log(payment.links[1].href);
                 res.send(payment.links[1].href);
             }
         });
@@ -373,8 +372,7 @@ router.get("/success", (req, res, next) => {
         } else {
 
             Book.findByIdAndUpdate(payment.transactions[0].item_list.items[0].sku, { $set: { sold: "YES" } }, (err, book) => {
-                if (err) next(err);
-                console.log(book);
+                if (err) return next(err);
 
                 let details = payment.payer.payer_info.shipping_address;
                 details.price = payment.transactions[0].amount.total;
@@ -385,7 +383,7 @@ router.get("/success", (req, res, next) => {
                 details.img = book.image;
 
                 Cart.create(details, (err, cart) => {
-                    if (err) next(err);
+                    if (err) return next(err);
 
                    return res.redirect("/cart");
                 });
@@ -399,7 +397,7 @@ router.get("/cancel", (req, res) => {
     res.send("Cancelled");
 });
 
-router.get("/cart", (req, res, next) => {
+router.get("/cart", middlewear.requireLogIn, (req, res, next) => {
     Cart.find({email: req.session.email}, (err, items) => {
         if (err) return next(err);
 
