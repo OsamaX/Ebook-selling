@@ -5,11 +5,15 @@ let app = express();
 
 app.set("view engine", "pug");
 app.set('port', process.env.PORT || 8080);
+app.set('env', process.env.NODE_ENV || "development");
 app.use("/static", express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/uploads"));
-app.use(express.static(__dirname + "/node_modules"));
 
-mongoose.connect("mongodb://bookworm123:assassin123@ds117148.mlab.com:17148/bookworm");
+mongoose.Promise = global.Promise
+
+mongoose.connect("mongodb://bookworm123:assassin123@ds117148.mlab.com:17148/bookworm", {
+    useMongoClient: true
+ });
 
 let db = mongoose.connection;
 
@@ -19,7 +23,7 @@ db.on("error", function (err) {
 
 
 app.use(session({
-    secret: 'mama chacha',
+    secret: 'ma ma cha cha',
     resave: true,
     saveUninitialized: false,
     store: new MongoStore({
@@ -48,8 +52,10 @@ app.use((err, req, res, next) => {
     if (app.get("env") == "development") {
         res.status(err.status || 500);
         res.render("error", {error: err.message, status: err.status})
-    }
-    next();
+    } else {
+        res.status(500);
+        res.render("error", {})
+    }   
 });
 
 
