@@ -8,8 +8,9 @@ module.exports = function imgValidate(profileImg, loc, next, res, cb) {
             return res.send("Invalid Image Type");
         } else {
 
-            let filePath = path.join(process.cwd(), 'uploads', loc, '/', new Date().getMilliseconds().toString()) + profileImg.name;
-
+            let filePath = path.join(process.env.PWD, 'uploads', loc, '/', new Date().getMilliseconds().toString()) + profileImg.name;
+            console.log(filePath)
+            
             profileImg.mv(filePath, err => {   
                 if (err) console.log(err);
 
