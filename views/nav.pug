@@ -1,0 +1,43 @@
+doctype html
+html
+  head
+    title=title
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+    link(href='https://fonts.googleapis.com/css?family=Oswald', rel='stylesheet')
+    link(href='static/css/style.css', rel='stylesheet')
+    script(src='https://code.jquery.com/jquery-3.2.1.min.js')
+    script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(src='/static/js/style.js')
+    
+  body
+    nav.navbar.navbar-default(class=(book_nav ? "book-nav" : ""))
+      .container-fluid
+        .navbar-header
+          a.navbar-brand(href='/')
+            img(alt='BookWorm', src='...')
+        ul.nav.navbar-nav.navbar-center
+          li
+            if !currentUser
+              a(href='/register') SIGN UP
+          li
+            a(href='/about') ABOUT
+          li
+            a(href='/contact') CONTACT
+          if currentUser
+            li            
+              a(href='/profile') MY PROFILE
+            li            
+              a(href='/books') BOOKS
+            li            
+              a(href='/cart') CART
+        ul.nav.navbar-nav.navbar-right
+          li
+            if currentUser 
+              div
+                img.img-circle.nav-prof(src=`${userImg ? userImg : "/static/images/profile.jpg"}` id="nav-pic")
+                a.btn.btn-primary.login(href="/logout") Log out
+            else
+              a.btn.btn-primary.login(href="/login") Login
+
+
