@@ -11,16 +11,13 @@ app.use(express.static(__dirname + "/uploads"));
 
 mongoose.Promise = global.Promise
 
-mongoose.connect("mongodb://bookworm123:assassin123@ds117148.mlab.com:17148/bookworm", {
-    useMongoClient: true
- });
+mongoose.connect("mongodb://bookworm123:assassin123@ds117148.mlab.com:17148/bookworm", (err) => {
+    if (err) return console.log(err);
+    
+    console.log("Connection to DB Created");
+});
 
 let db = mongoose.connection;
-
-db.on("error", function (err) {  
-    console.log('Mongoose default connection error: ' + err);
-}); 
-
 
 app.use(session({
     secret: 'ma ma cha cha',
