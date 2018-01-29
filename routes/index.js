@@ -124,7 +124,7 @@ router.post("/pic_upload", function (req, res, next) {
         return res.end("Invalid File Type");
     }
 
-    let filePath = path.join(process.cwd(), 'uploads', 'profileImg', '/', new Date().getMilliseconds().toString()) + profileImg.name;
+    let filePath = path.join(process.env.PWD, 'uploads', 'profileImg', '/', new Date().getMilliseconds().toString()) + profileImg.name;
 
 
     profileImg.mv(filePath, err => {
