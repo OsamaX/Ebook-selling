@@ -12,7 +12,7 @@ app.use(express.static(__dirname + "/node_modules"));
 
 mongoose.Promise = global.Promise
 
-mongoose.connect("mongodb://localhost:27017/bookworm", err => {
+mongoose.connect("mongodb://bookworm123:assassin123@ds117148.mlab.com:17148/bookworm", err => {
     if (err) {
       return console.log(err.message)
     } else console.log("Connection to DB Created");
