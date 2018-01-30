@@ -1,0 +1,142 @@
+extends layout
+
+block content
+    .container-fluid.book-container
+        #myCarousel.carousel.slide(data-ride='carousel')
+            // Indicators
+            ol.carousel-indicators
+                li.active(data-target='#myCarousel', data-slide-to='0')
+                li(data-target='#myCarousel', data-slide-to='1')
+                li(data-target='#myCarousel', data-slide-to='2')
+            // Wrapper for slides
+            .carousel-inner
+                .item.active
+                    img(src='static/images/101.jpg', alt='Los Angeles', style='width:100%;')
+                .item
+                    img(src='static/images/102.jpg', alt='Chicago', style='width:100%;')
+                .item
+                    img(src='static/images/103.jpg', alt='New york', style='width:100%;')
+            // Left and right controls
+            a.left.carousel-control(href='#myCarousel', data-slide='prev')
+                span.glyphicon.glyphicon-chevron-left
+                span.sr-only Previous
+            a.right.carousel-control(href='#myCarousel', data-slide='next')
+                span.glyphicon.glyphicon-chevron-right
+                span.sr-only Next
+
+        #myModal.modal.fade(role='dialog')
+            .modal-dialog
+                .modal-content
+                    .modal-header
+                        button.close(type='button', data-dismiss='modal') ×
+                        h4.modal-title New Book
+                    .modal-body
+                        .alert.alert-success
+                            strong Success!
+                            |  Book Added.
+                        .alert.alert-danger.error2(style='position:relative;')
+                            strong| Details can't be Blank
+                        form(method='POST' action="/add_book" id="add_book")
+                            .form-group
+                                label Title
+                                input.form-control(type='text',   name="title")
+                            .form-group
+                                label(for='comment') Description
+                                textarea#comment.form-control(rows='5',   name="description")
+                            .form-group
+                                label Price
+                                input.form-control(type='number',   name="price")
+                            .form-group
+                                label(for='sel1') Category
+                                select#sel1.form-control(name="category")
+                                    option(value="sci-fic") Science fiction
+                                    option(value="drama") Drama
+                                    option(value="act-adv") Action and Adventure
+                                    option(value="romance") Romance
+                                    option(value="horror") Horror
+                            .form-group
+                                label Image
+                                input.form-control#img_Upload(type='file', name="image")
+                            button.btn.btn-success.submit Submit
+                    .modal-footer
+                        button.btn.btn-default(type='button', data-dismiss='modal' style="width: 100%;") Close
+
+        #myModal2.modal.fade(role='dialog')
+            .modal-dialog.modal-lg
+                .modal-content
+                    .modal-header.details-head
+                        button.close.details-close(type='button', data-dismiss='modal') ×
+                        h4.modal-title.mera-title Guy Kawasaki
+                    .modal-body.details-body
+                        .row
+                            .col-xs-offset-3.col-sm-offset-4.col-md-offset-0.col-md-3
+                                .book-header
+                                    img.book-cover.desc-cover(style="background-image: url('static/books/1.jpg')")
+                                    h3.desc-title Book Details
+                                    p.p-cat Price:
+                                        span.desc-title.price  $5
+                                    p.p-cat Category:
+                                        span.desc-title.category  Science Fiction
+
+                            .col-xs-12.col-md-9
+                                .desc-title
+                                    h3 Description
+                                    .book-description
+                                        p.breif-desc Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum. consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodoconsequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat nonproident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+
+
+                                    button.btn.btn-primary.seller-info Seller Info
+                    .modal-footer
+                        button.btn.btn-default(data-dismiss="modal") Close
+
+
+
+        .container-fluid#daddy
+            .row
+                .col-xs-12.col-md-2
+                    h2.sort Sort By
+                    hr
+                    li
+                        a.cat(href='books?q=all') All Books
+                    li
+                        a.cat(href='books?q=my') My Books
+                    li
+                        a.cat(href='books?q=sci-fic') Science fiction
+                    li
+                        a.cat(href='books?q=drama') Drama
+                    li
+                        a.cat(href='books?q=act-adv') Action and Adventure
+                    li
+                        a.cat(href='books?q=romance') Romance
+                    li
+                        a.cat(href='books?q=horror') Horror
+                    hr
+                    button.btn.btn-success.add-book(data-toggle='modal', data-target='#myModal') Add New Book
+                .col-xs-12.col-md-10#page-here
+                    h2.books-title=  q != "drama" && q != "romance" && q != "horror" && q != "my" ? q == "sci-fic" ? "Science Fiction" : q == "act-adv" ? "Action and Adventure" : "All Books" : q.slice(0,1).toUpperCase() + q.slice(1) + " Books"
+                    
+                    hr
+                    .show-books
+                        each val, index in books
+                            .col-xs-6.col-sm-3.col-lg-2
+                                .books
+                                    img.book-cover(style=`background-image: url(${val.image.replace("\\", "/")})`)
+                                    p.book-title=val.title
+                                    if val.email == currentEmail
+                                        p.posted-by Posted by You
+                                    else
+                                        p.posted-by=`Posted by ${val.posted_by}`
+                                    p.book-desc=val.description
+                                    button.btn.btn-primary(data-toggle="modal" id=val._id data-target="#myModal2" class="details") Details
+                                    | #{' '}
+                                    if val.email == currentEmail
+                                        button.btn.btn-danger.delete(id=val._id,data-target="/delete_book", data-method="DELETE", data-disabled="true") Delete
+                                    else
+                                        button.btn.btn-success.buy(id=val._id data-target="/buy" data-method="POST" data-disabled="true") Buy
+
+            #paginate
+                if count > 12
+                    ul.pagination
+                        -for(var i = 1; i <= Math.ceil(count / 12); i++) 
+                            li.pages
+                                a.change_page(data-target="/page", data-method="GET", data-disabled="true")=i
