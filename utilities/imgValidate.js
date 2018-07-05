@@ -11,11 +11,12 @@ module.exports = function imgValidate(profileImg, loc, next, res, cb) {
 
             profileImg.mv(filePath, err => {   
                 if (err) console.log(err);
-
+                // console.log(filePath)
                 filePath = filePath.split("\\");
-                filePath = filePath.splice(6);
-                filePath = path.join(filePath[0], filePath[1]);
-               
+                let i = filePath.indexOf("uploads")
+                filePath = filePath.splice(i);
+                filePath = path.join(filePath[1], filePath[2]);
+
                 cb(filePath);
             });
         }
